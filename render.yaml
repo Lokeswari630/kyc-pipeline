@@ -1,0 +1,38 @@
+services:
+  - type: web
+    name: kyc-backend
+    env: python
+    buildCommand: cd kyc_backend && pip install -r requirements.txt && python manage.py collectstatic --noinput && python manage.py migrate
+    startCommand: cd kyc_backend && gunicorn kyc_project.wsgi:application --log-file - --timeout 60
+    plan: free
+    numInstances: 1
+    envVars:
+      - key: USE_POSTGRES
+        value: "true"
+      - key: DEBUG
+        value: "false"
+      - key: SECRET_KEY
+        generateValue: true
+      - key: DATABASE_URL
+        fromDatabase:
+          name: kyc_db
+          property: connectionString
+      - key: CORS_ALLOWED_ORIGINS
+        value: "https://${RENDER_EXTERNAL_HOSTNAME},http://localhost:3000,http://localhost:5173"
+
+  - type: web
+    name: kyc-frontend
+    env: node
+    region: oregon
+    plan: free
+    buildCommand: cd kyc_frontend && npm install && npm run build
+    startCommand: cd kyc_frontend && npm run preview
+    numInstances: 1
+    envVars:
+      - key: VITE_API_URL
+        value: "https://kyc-backend-${RENDER_SERVICE_NAME_SUFFIX}.onrender.com/api/v1"
+
+databases:
+  - name: kyc_db
+    databaseName: kyc_production
+    plan: free
