@@ -12,7 +12,11 @@ SECRET_KEY = config('SECRET_KEY', default='django-insecure-kyc-secret-key-change
 
 DEBUG = config('DEBUG', default=True, cast=bool)
 
-ALLOWED_HOSTS = config('ALLOWED_HOSTS', default='localhost,127.0.0.1', cast=Csv())
+ALLOWED_HOSTS = config(
+    'ALLOWED_HOSTS',
+    default='localhost,127.0.0.1,.onrender.com',
+    cast=Csv()
+)
 
 INSTALLED_APPS = [
     'django.contrib.admin',
@@ -59,12 +63,15 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'kyc_project.wsgi.application'
 
-# Database configuration: PostgreSQL in production, SQLite locally
-if config('USE_POSTGRES', default=False, cast=bool):
+# Database configuration: use DATABASE_URL when provided, otherwise SQLite locally.
+database_url = config('DATABASE_URL', default='')
+
+if database_url:
     import dj_database_url
+
     DATABASES = {
         'default': dj_database_url.config(
-            default=config('DATABASE_URL', default=''),
+            default=database_url,
             conn_max_age=600
         )
     }
@@ -126,7 +133,7 @@ CORS_ALLOW_ALL_ORIGINS = False
 
 CORS_ALLOWED_ORIGINS = config(
     'CORS_ALLOWED_ORIGINS',
-    default='https://kyc-pipeline.vercel.app',
+    default='https://kyc-pipeline.onrender.com,https://kyc-pipeline.vercel.app,http://localhost:3000,http://localhost:5173',
     cast=Csv()
 )
 

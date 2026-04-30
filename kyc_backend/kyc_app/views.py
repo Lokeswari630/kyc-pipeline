@@ -2,6 +2,7 @@
 DRF Views for KYC app API.
 """
 
+import logging
 from rest_framework import viewsets, status
 from rest_framework.decorators import action
 from rest_framework.response import Response
@@ -12,6 +13,8 @@ from django.utils import timezone
 from django.contrib.auth import authenticate
 from django.db.models import Q, Count, F
 from datetime import timedelta
+
+logger = logging.getLogger(__name__)
 
 from .models import User, KYCSubmission, Document, Notification
 from .serializers import (
@@ -87,9 +90,9 @@ class AuthViewSet(viewsets.ViewSet):
                 }
             })
         except Exception as e:
-            import traceback
+            logger.error(f"Login error: {str(e)}", exc_info=True)
             return Response(
-                {'error': str(e), 'traceback': traceback.format_exc()},
+                {'error': str(e)},
                 status=status.HTTP_500_INTERNAL_SERVER_ERROR
             )
 
