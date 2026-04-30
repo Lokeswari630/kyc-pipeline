@@ -2,7 +2,7 @@ services:
   - type: web
     name: kyc-backend
     env: python
-    buildCommand: cd kyc_backend && pip install -r requirements.txt && python manage.py collectstatic --noinput && python manage.py migrate
+    buildCommand: cd kyc_backend && pip install -r requirements.txt && python manage.py collectstatic --noinput && python manage.py migrate && python manage.py seed_data
     startCommand: cd kyc_backend && gunicorn kyc_project.wsgi:application --log-file - --timeout 60
     plan: free
     numInstances: 1
