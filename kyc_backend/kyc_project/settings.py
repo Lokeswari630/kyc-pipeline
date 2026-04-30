@@ -124,8 +124,10 @@ REST_FRAMEWORK = {
 # CORS Configuration
 CORS_ALLOW_ALL_ORIGINS = False
 
-CORS_ALLOWED_ORIGINS = [
-    "https://kyc-pipeline.vercel.app",
-]
+CORS_ALLOWED_ORIGINS = config(
+    'CORS_ALLOWED_ORIGINS',
+    default='https://kyc-pipeline.vercel.app',
+    cast=Csv()
+)
 
 CORS_ALLOW_CREDENTIALS = True
