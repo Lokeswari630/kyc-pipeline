@@ -63,25 +63,13 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'kyc_project.wsgi.application'
 
-# Database configuration: use DATABASE_URL when provided, otherwise SQLite locally.
-database_url = config('DATABASE_URL', default='')
-
-if database_url:
-    import dj_database_url
-
-    DATABASES = {
-        'default': dj_database_url.config(
-            default=database_url,
-            conn_max_age=600
-        )
+# Database configuration: always use SQLite for the test/demo deployment.
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': BASE_DIR / 'db.sqlite3',
     }
-else:
-    DATABASES = {
-        'default': {
-            'ENGINE': 'django.db.backends.sqlite3',
-            'NAME': BASE_DIR / 'db.sqlite3',
-        }
-    }
+}
 
 AUTH_PASSWORD_VALIDATORS = [
     {
