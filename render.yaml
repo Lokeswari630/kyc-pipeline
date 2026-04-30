@@ -18,9 +18,9 @@ services:
           name: kyc_db
           property: connectionString
       - key: ALLOWED_HOSTS
-        value: "kyc-pipeline-${RENDER_SERVICE_NAME_SUFFIX}.onrender.com,localhost"
+        value: "kyc-pipeline.onrender.com,localhost"
       - key: CORS_ALLOWED_ORIGINS
-        value: "https://kyc-pipeline-${RENDER_SERVICE_NAME_SUFFIX}.onrender.com,http://localhost:3000,http://localhost:5173"
+        value: "https://kyc-pipeline.onrender.com,http://localhost:3000,http://localhost:5173"
 
   - type: web
     name: kyc-frontend
@@ -32,7 +32,7 @@ services:
     numInstances: 1
     envVars:
       - key: VITE_API_URL
-        value: "https://kyc-backend-${RENDER_SERVICE_NAME_SUFFIX}.onrender.com/api/v1"
+        value: "https://kyc-pipeline.onrender.com/api/v1"
 
 databases:
   - name: kyc_db
